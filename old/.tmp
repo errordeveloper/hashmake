@@ -1,3 +1,0 @@
-HASH_TEXT ?= sha256sum -t - | cut -d" " -f1
-build/hashes//f6ab5071d18a45b96cea394639eacaa71e8fdf5c6803e5203aae20317c6a8f16: test.i
-		@cat $< | $(HASH_TEXT) > $@
