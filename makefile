@@ -1,5 +1,8 @@
 include header.mk
 
+usage:
+	@echo "$@: make test.o"
+
 %.o: %.i $(HASH_PATH) $(TEMP_PATH)
 	for f1 in $(HASH_PATH)/$(ENV_HASH); do \
 	  $(MAKE) $$f1 FRESH1=$$f1 INPUT=$< ; \
