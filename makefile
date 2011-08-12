@@ -1,25 +1,28 @@
 include header.mk
 
+HASH1_FORMAT= $(HASH_PATH)/$(ENV_HASH)
+HASH2_FORMAT= `cat $< | $(HASH_TEXT)`
+
 usage:
 	@echo "$@: make test.o"
 
-%.o: %.i $(HASH_PATH) $(TEMP_PATH)
-	for f1 in $(HASH_PATH)/$(ENV_HASH); do \
-	  $(MAKE) $$f1 FRESH1=$$f1 INPUT=$< ; \
+%.o: %.i $(HASH_PATH)
+	for h1 in $(HASH1_FORMAT); do \
+	  $(MAKE) $$h1 HASH1_STRING=$$h1 INPUT=$< ; \
 	done ; \
-	for f2 in $$f1/`cat $< | $(HASH_TEXT)`; do \
-	  $(MAKE) $$f2 FRESH2=$$f2 ; \
+	for h2 in $$h1/$(HASH2_FORMAT); do \
+	  $(MAKE) $$h2 HASH2_STRING=$$h2 ; \
 	done
 
 $(HASH_PATH):
 	mkdir -p $@
 
-$(TEMP_PATH):
+#$(TEMP_PATH):
+#	mkdir -p $@
+
+$(HASH1_STRING):
 	mkdir -p $@
 
-$(FRESH1):
-	mkdir -p $@
-
-$(FRESH2): $(FRESH1)
+$(HASH2_STRING): $(HASH1_STRING)
 	mkdir $@
 	echo "It works!" > $@/test.o

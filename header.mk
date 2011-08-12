@@ -7,15 +7,43 @@ COMMON_HEADER = header.mk
 
 ## these are not real makefiles, they instead
 ## serve as kind of templates :)
-STAGE1 = stage1.mk
-STAGE2 = stage2.mk
 
-HASH_TEXT ?= sha256sum -t - | cut -d" " -f1
-HASH_DATA ?= sha256sum -b - | cut -d" " -f1
+## TODO: find performance benchmarks
+## and see whether there is a need for
+## checking the OS name!
+
+## this is standard option for Linux
+#TRIM = | cut -d" " -f1
+#HASH_TEXT ?= sha256sum -t - $(TRIM)
+#HASH_DATA ?= sha256sum -b - $(TRIM)
+
+## without coreutils one ca use openssl
+## openssl implements many different
+## algorithms that user may wish to select
+TRIM = | cut -d" " -f2
+HASH_TYPE ?= sha256
+HASH_TEXT ?= openssl $(HASH_TYPE) $(TRIM)
+
+## or Perl script shasum:
+#HASH_TEXT ?= shasum -a256 -t - $(TRIM)
+#HASH_DATA ?= shasum -a256 -b - $(TRIM)
 
 HASH_PATH ?= build/hashes/
 TEMP_PATH ?= build/mktemp/
 
+## `env` is only good for testing, it shouldn't
+## be used for projects, since nobody cares to
+## track all different variables, though one may
+## wish to do so :)
 ENV_HASH = $(shell env | $(HASH_TEXT))
 
+## TODO: a flag collector needs to be implemented
 CFLAGS_HASH = $(shell $(CFLAGS) | $(HASH_TEXT))
+## perhaps there should be something like this:
+#	$(COMMAND) $(INPUT) $(OUTPUT)
+## flags like '-o' should be put in between, but
+## this may become tedious and perhpas it would
+## just a hash of the entire command line and
+## there will be a target 'do' with underfined
+## variable 'COMMAND' which will need to be passed
+## to $(MAKE) from the previous target rule.
