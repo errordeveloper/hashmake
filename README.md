@@ -1,5 +1,11 @@
 # A Hack to Make 'make' Work Better!
 
+ This is a simple implementation of _build
+ logging_ or _accumulative build methodology_
+ (I'm not quite sure which describes it best).
+ I have hear some confusion with ccache, but
+ ccache is implemented on the lower level and
+ is [language specific](http://ccache.samba.org/).
  The idea is to check upon whether contents
  of a file and the compilation flags has
  changed from one run to another.
