@@ -20,8 +20,10 @@ COMMON_HEADER = header.mk
 ## without coreutils one ca use openssl
 ## openssl implements many different
 ## algorithms that user may wish to select
-#TRIM = | cut -d" " -f2
+## OpenSSL 0.9.2 doesn't implement sha256
 #HASH_TYPE ?= sha256
+## this TRIM works for 1.0.x and 0.9.x
+TRIM = | cut -d" " -f2
 HASH_TYPE ?= sha1
 HASH_TEXT ?= openssl $(HASH_TYPE) $(TRIM)
 
